@@ -21,9 +21,6 @@ def timer():
 schedthread = threading.Thread(target=timer)
 schedthread.start()
 
-
-
-
 ############# ENV VAR PARSING ###############
 
 #load_dotenv()
@@ -40,23 +37,27 @@ LOG_CHANNEL= 740429361240604762
 API_callcount=0
 
 ######### COMMAND PREFIX ##########
-intents = discord.Intents.all()
-intents.members = True
-client = commands.Bot(command_prefix = '.', intents=intents)
-client.remove_command('help')
-##################### EVENTS ####################
 
-@client.event
-async def on_ready():
-    print('Almabot is ready.')
+client = None
 
-# @client.event
-# async def on_member_join(member):
-#     print(f'{member} has joined a server.')
-#
-# @client.event
-# async def on_member_remove(member):
-#     print(f'{member} has left a server.')
+class Almabot(commands.Bot):
+    async def on_ready(self):
+        print('')
+    async def setup_hook(self):
+        print("Almabot i loading nitroparser...")
+        await self.load_extension("nitroparser")
+
+
+def handle_discord():
+    print('Setting up Discord py things...')
+    intents = discord.Intents.all()
+    intents.members = True
+    global client
+    client = Almabot(command_prefix = '.', intents=intents)
+    client.run(DISCORD_API_TOKEN)
+    print('After Discord py things....')
+
+handle_discord()
 
 ######### COMMANDS #########
 
@@ -142,13 +143,13 @@ async def A_uservalid(member):
         return False
 ############ COG LOAD LOOP ###############
 
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        try:
-            print(f'loading {filename}')
-            client.load_extension(f'cogs.{filename[:-3]}')
-        except:
-            print(f'error loading {filename} on cog load')
+#for filename in os.listdir('./cogs'):
+#    if filename.endswith('.py'):
+#        try:
+#            print(f'loading {filename}')
+#            client.load_extension(f'cogs.{filename[:-3]}')
+#        except:
+#            print(f'error loading {filename} on cog load')
 
 # async def schedule_loop():
 #     while True:
@@ -158,17 +159,4 @@ for filename in os.listdir('./cogs'):
 #
 # client.loop.create_task(schedule_loop())
 
-
-client.run(DISCORD_API_TOKEN)
-
-#async def cogload():
-#    for filename in os.listdir('./cogs'):
-#        if filename.endswith('.py'):
-#            try:
-#                print(f'loading {filename}')
-#                client.load_extension(f'cogs.{filename[:-3]}')
-#            except:
-#                print(f'error loading {filename} on cog load')
-
-# cogload()
 # client.run(DISCORD_API_TOKEN)
