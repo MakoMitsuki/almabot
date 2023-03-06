@@ -142,13 +142,13 @@ async def A_uservalid(member):
         return False
 ############ COG LOAD LOOP ###############
 
-#for filename in os.listdir('./cogs'):
-#    if filename.endswith('.py'):
-#        try:
-#            print(f'loading {filename}')
-#            client.load_extension(f'cogs.{filename[:-3]}')
-#        except:
-#            print(f'error loading {filename} on cog load')
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        try:
+            print(f'loading {filename}')
+            client.load_extension(f'cogs.{filename[:-3]}')
+        except:
+            print(f'error loading {filename} on cog load')
 
 # async def schedule_loop():
 #     while True:
@@ -159,16 +159,16 @@ async def A_uservalid(member):
 # client.loop.create_task(schedule_loop())
 
 
-#client.run(DISCORD_API_TOKEN)
-
-async def cogload():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            try:
-                print(f'loading {filename}')
-                client.load_extension(f'cogs.{filename[:-3]}')
-            except:
-                print(f'error loading {filename} on cog load')
-
-cogload()
 client.run(DISCORD_API_TOKEN)
+
+#async def cogload():
+#    for filename in os.listdir('./cogs'):
+#        if filename.endswith('.py'):
+#            try:
+#                print(f'loading {filename}')
+#                client.load_extension(f'cogs.{filename[:-3]}')
+#            except:
+#                print(f'error loading {filename} on cog load')
+
+# cogload()
+# client.run(DISCORD_API_TOKEN)
