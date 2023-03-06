@@ -24,7 +24,7 @@ schedthread.start()
 ############# ENV VAR PARSING ###############
 
 #load_dotenv()
-DISCORD_API_TOKEN = 'NzMwMDg4MDk4ODAwNTk5MTMx.XwSZhw.FDYkqAAfSRKOBeLROo6RHKIZxr4'
+DISCORD_API_TOKEN = 'NzMwMDg4MDk4ODAwNTk5MTMx.GxSlU2.JV4nhxHmy-1-8SFeP6eHn8voD4N1BZB-EEnEAw'
 GSPREAD_ID = '1BEovJX4OQm-fQDBTDFyhPUqEqpMxZ1KQEGVtCh7aIa8'
 GUILD_ID = 465931452085829643
 VALID_CHANNELS = [739561983187222558,539671619677978634,740429361240604762]
@@ -38,81 +38,71 @@ API_callcount=0
 
 ######### COMMAND PREFIX ##########
 
-client = None
-
 class Almabot(commands.Bot):
+
     async def on_ready(self):
         print('')
+
     async def setup_hook(self):
         print("Almabot i loading nitroparser...")
         await self.load_extension("nitroparser")
 
-
-def handle_discord():
-    print('Setting up Discord py things...')
-    intents = discord.Intents.all()
-    intents.members = True
-    global client
-    client = Almabot(command_prefix = '.', intents=intents)
-    client.run(DISCORD_API_TOKEN)
-    print('After Discord py things....')
-
-handle_discord()
+bot = Almabot(command_prefix = '.', intents=discord.Intents.default())
 
 ######### COMMANDS #########
 
-@client.command()
+@bot.command()
 async def load(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
-        client.load_extension(f'cogs.{extension}')
+        bot.load_extension(f'cogs.{extension}')
         print(f'loading {extension}')
 
-@client.command()
+@bot.command()
 async def unload(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
-        client.unload_extension(f'cogs.{extension}')
+        bot.unload_extension(f'cogs.{extension}')
         print(f'unloading {extension}')
 
-@client.command()
+@bot.command()
 async def reload(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
-        client.unload_extension(f'cogs.{extension}')
-        client.load_extension(f'cogs.{extension}')
+        bot.unload_extension(f'cogs.{extension}')
+        bot.load_extension(f'cogs.{extension}')
         print(f'reloading {extension}')
 
-@client.command()
+@bot.command()
 async def validusers(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
         for i in VALID_USERS:
-            n=client.get_user(i)
+            n=bot.get_user(i)
             if n != None:
                 print (f'{n} \ {n.display_name} \ {n.id}')
             else:
                 print(i)
         print('}')
 
-@client.command()
+@bot.command()
 async def validchannels(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
         for i in VALID_CHANNELS:
-            n=client.get_channel(i)
+            n=bot.get_channel(i)
             print (f'{n.guild} \ {n.name} \ {n.id}')
         print('}')
 
-@client.command()
+@bot.command()
 async def count(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print(f'API_callcount is {API_callcount}')
 
-@client.command()
+@bot.command()
 async def kill(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         try:
             await ctx.send('Goodbye cruel world! (logging out)')
         finally:
-            await client.logout()
+            await bot.logout()
 
 #Bot command Channel Validation Function
 
@@ -147,7 +137,7 @@ async def A_uservalid(member):
 #    if filename.endswith('.py'):
 #        try:
 #            print(f'loading {filename}')
-#            client.load_extension(f'cogs.{filename[:-3]}')
+#            bot.load_extension(f'cogs.{filename[:-3]}')
 #        except:
 #            print(f'error loading {filename} on cog load')
 
@@ -157,6 +147,12 @@ async def A_uservalid(member):
 #         await asyncio.sleep(1)
 #
 #
-# client.loop.create_task(schedule_loop())
+# bot.loop.create_task(schedule_loop())
 
-# client.run(DISCORD_API_TOKEN)
+# bot.run(DISCORD_API_TOKEN)
+
+def main():
+    bot.run(DISCORD_API_TOKEN)
+
+if __name__ == "__main__":
+    main()

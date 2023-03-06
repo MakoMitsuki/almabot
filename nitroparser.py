@@ -7,22 +7,63 @@ import schedule
 import time
 from datetime import datetime
 import Almabot
-from Almabot import client
 from discord.ext import commands, tasks
 
 
 class Nitro(commands.Cog):
 
 
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
         schedule.every().day.at("09:48").do(Almabot.event_starter, self.check_emoji)
+
+    async def logToChannel(self, message):
+        try:
+            await self.bot.get_channel(Almabot.LOG_CHANNEL).send(message)
+        finally:
+            pass
+
+    @tasks.loop(hours=24)
+    async def check_emoji(self):
+        print('emoji_check starting')
+        await self.logToChannel('Emoji_check starting')
+        with open('./nitro_data.json', 'r') as f:
+            nitrolist = json.load(f)
+
+        emoji_count=0
+
+        for i in nitrolist:
+            if nitrolist[i]['emoji']=='0':
+                start=nitrolist[str(member.id)]['Nitro Start']
+                n=(datetime.today().date()-datetime.fromisoformat(start).date()).days//30
+                if n >= 2:
+                    emoji_count+=1
+                    nitrolist[i]['emoji']='1'
+                else:
+                    pass
+            else:
+                pass
+        if emoji_count > 0:
+            try:
+                art_channel=Almabot.bot.get_channel(489201127125155850)
+                await art_channel.send(f'<!@&489196596257488897> {emoji_count} booster(s) are now eligble for emojis!')
+            finally:
+
+                with open('./nitro_data.json', 'w') as f:
+                    json.dump(nitrolist, f)
+
+        await log('scheduled emoji check complete')
+    
+    @check_emoji.before_loop
+    async def before_check_emoji():
+        await self.bot.wait_until_ready()
+    
 ################################ EVENTS ###########################
 
     @commands.Cog.listener()
     async def on_ready(self):
         try:
-            print(f'Nitroparser loaded and connected to {self.client.get_guild(Almabot.GUILD_ID)}')
+            print(f'Nitroparser loaded and connected to {self.bot.get_guild(Almabot.GUILD_ID)}')
         except:
             print('Environmental variables failed to load.\n Not connected to any server.')
         try:
@@ -31,9 +72,9 @@ class Nitro(commands.Cog):
             print('Failed to connect to Google API')
         Almabot.API_callcount=0
         print('API_callcount initialized to 0')
-        await log('Almabot is online!')
-        schedule.every().day.at("09:48").do(check_emoji)
-        await log('Emoji_check scheduled for 12:00pm EST.')
+        await self.logToChannel('Almabot is online!')
+        schedule.every().day.at("09:48").do(self.check_emoji)
+        await self.logToChannel('Emoji_check scheduled for 12:00pm EST.')
 
 
     @commands.Cog.listener()
@@ -70,7 +111,7 @@ class Nitro(commands.Cog):
 
     @commands.Cog.listener()
     async def on_user_update(self, before, after):
-        if before.name != after.name and self.client.get_guild(Almabot.GUILD_ID).get_member(after.id).premium_since != None:
+        if before.name != after.name and self.bot.get_guild(Almabot.GUILD_ID).get_member(after.id).premium_since != None:
             with open('./nitro_data.json', 'r') as f:
                 nitrolist = json.load(f)
 
@@ -202,7 +243,7 @@ class Nitro(commands.Cog):
     @commands.command()
     async def logtest(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
-            await log('test')
+            await self.logToChannel('test')
 
 #     @commands.command()
 #     async def emoji_init(self, ctx):
@@ -221,43 +262,10 @@ class Nitro(commands.Cog):
 #     @commands.command()
 #     async def channeltest(self, ctx):
 #         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
-#             art_channel=Almabot.client.get_channel(489201127125155850)
+#             art_channel=Almabot.bot.get_channel(489201127125155850)
 #             await art_channel.send('<@&489196596257488897> This is a test. Sorry for the ping!')
 
-################### TASKS #######################################
-    @tasks.loop(hours=24)
-    async def check_emoji(self):
-        print('emoji_check starting')
-        await log('Emoji_check starting')
-        with open('./nitro_data.json', 'r') as f:
-            nitrolist = json.load(f)
-
-        emoji_count=0
-
-        for i in nitrolist:
-            if nitrolist[i]['emoji']=='0':
-                start=nitrolist[str(member.id)]['Nitro Start']
-                n=(datetime.today().date()-datetime.fromisoformat(start).date()).days//30
-                if n >= 2:
-                    emoji_count+=1
-                    nitrolist[i]['emoji']='1'
-                else:
-                    pass
-            else:
-                pass
-        if emoji_count > 0:
-            try:
-                art_channel=Almabot.client.get_channel(489201127125155850)
-                await art_channel.send(f'<!@&489196596257488897> {emoji_count} booster(s) are now eligble for emojis!')
-            finally:
-
-                with open('./nitro_data.json', 'w') as f:
-                    json.dump(nitrolist, f)
-
-        await log('scheduled emoji check complete')
-    @check_emoji.before_loop
-    async def before_check_emoji():
-        await self.client.wait_until_ready()
+    
 
 
 ############################ FUNCTIONS #####################################
@@ -273,7 +281,7 @@ async def add_nitrodata(nitrolist, member):
         nitrolist[str(member.id)]['Nitro Total']='0'#str((datetime.today().date()-datetime.date(member.premium_since)).days//30)
         nitrolist[str(member.id)]['gspread Index']='A'+str(len(nitrolist)+3) #int = spreadsheet vertical offset
         nitrolist[str(member.id)]['emoji']='0'
-        await log(f'{member} has boosted the server for the first time!')
+        await self.logToChannel(f'{member} has boosted the server for the first time!')
         if api_free():
             await write_to_gspread(nitrolist, member)
         else:
@@ -282,7 +290,7 @@ async def add_nitrodata(nitrolist, member):
 async def change_displayname_nitrodata(nitrolist, member):
     if str(member.id) in nitrolist and str(member.display_name) != nitrolist[str(member.id)]['Display Name']:
         nitrolist[str(member.id)]['Display Name']=str(member.display_name)
-        await log(f'{member} has changed their `display_name` to {member.display_name}')
+        await self.logToChannel(f'{member} has changed their `display_name` to {member.display_name}')
         if api_free():
             await write_to_gspread(nitrolist, member)
         else:
@@ -296,7 +304,7 @@ async def inactivate_nitrodata(nitrolist, member):
         nitrolist[str(member.id)]['Nitro Total']=str(i)
         nitrolist[str(member.id)]['Nitro Status']='Inactive'
         nitrolist[str(member.id)]['Nitro End']=str(datetime.now().date())
-        await log(f'{member} has removed their server boost.')
+        await self.logToChannel(f'{member} has removed their server boost.')
         #do stuff here
         if api_free():
             await write_to_gspread(nitrolist, member)
@@ -312,7 +320,7 @@ async def reactivate_nitrodata(nitrolist, member):
         if diff > 10:
             nitrolist[str(member.id)]['Nitro Start']=str(datetime.date(member.premium_since))
             nitrolist[str(member.id)]['Nitro Status']='Active'
-            await log(f'{member} has reboosted the server. Consecutive months have been reset!')
+            await self.logToChannel(f'{member} has reboosted the server. Consecutive months have been reset!')
         else:
             nitrolist[str(member.id)]['Nitro Status']='Active'
             i=int(nitrolist[str(member.id)]['Nitro Total'])
@@ -320,7 +328,7 @@ async def reactivate_nitrodata(nitrolist, member):
             c=nitrolist[str(member.id)]['Nitro End']
             i-=(datetime.fromisoformat(c).date()-datetime.fromisoformat(d).date()).days//30
             nitrolist[str(member.id)]['Nitro Total']=str(i)
-            await log(f'{member} has reboosted the server within 10 days.')
+            await self.logToChannel(f'{member} has reboosted the server within 10 days.')
 
         if api_free():
             await write_to_gspread(nitrolist, member)
@@ -385,7 +393,7 @@ async def add_to_queue(nitrolist, member):
 
 def api_free():
     if Almabot.API_callcount==0:
-        Almabot.client.loop.create_task(callcount_reset())
+        Almabot.bot.loop.create_task(callcount_reset())
     if Almabot.API_callcount<40:
         Almabot.API_callcount+=1
         print(f'API_callcount {Almabot.API_callcount}/40')
@@ -454,13 +462,6 @@ async def print_database_batch_gspread():
     wks.batch_update(batch_data, value_input_option='USER_ENTERED')
     print('printed batch_data to sheet')
 
-async def log(message):
-    try:
-        ch=Almabot.client.get_channel(Almabot.LOG_CHANNEL)
-        await ch.send(message)
-    finally:
-        pass
-
 # async def check_emoji():
 #     print('emoji_check starting')
 #     await log('Emoji_check starting')
@@ -482,7 +483,7 @@ async def log(message):
 #             pass
 #     if emoji_count > 0:
 #         try:
-#             art_channel=Almabot.client.get_channel(489201127125155850)
+#             art_channel=Almabot.bot.get_channel(489201127125155850)
 #             await art_channel.send(f'<@&489196596257488897> {emoji_count} booster(s) are now eligble for emojis!')
 #         finally:
 #
@@ -492,5 +493,5 @@ async def log(message):
 #     await log('scheduled emoji check complete')
 
 
-async def setup(client):
-    await client.add_cog(Nitro(client))
+async def setup(bot):
+    await bot.add_cog(Nitro(bot))
