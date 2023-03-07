@@ -1,9 +1,7 @@
 import discord
-#from dotenv import load_dotenv
 import schedule
-import asyncio
 import os
-from discord.ext import commands, tasks
+from discord.ext import commands
 import threading
 import time
 from dotenv import load_dotenv, find_dotenv
@@ -66,7 +64,7 @@ async def reload(ctx, extension):
 async def validusers(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
-        for i in VALID_USERS:
+        for i in os.environ.get("VALID_USERS"):
             n=bot.get_user(i)
             if n != None:
                 print (f'{n} \ {n.display_name} \ {n.id}')
@@ -78,7 +76,7 @@ async def validusers(ctx):
 async def validchannels(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
-        for i in VALID_CHANNELS:
+        for i in os.environ.get("VALID_CHANNELS"):
             n=bot.get_channel(i)
             print (f'{n.guild} \ {n.name} \ {n.id}')
         print('}')
