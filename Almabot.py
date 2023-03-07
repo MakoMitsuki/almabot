@@ -64,7 +64,7 @@ async def reload(ctx, extension):
 async def validusers(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
-        for i in os.environ.get("VALID_USERS"):
+        for i in os.getenv("VALID_USERS"):
             n=bot.get_user(i)
             if n != None:
                 print (f'{n} \ {n.display_name} \ {n.id}')
@@ -76,7 +76,7 @@ async def validusers(ctx):
 async def validchannels(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
-        for i in os.environ.get("VALID_CHANNELS"):
+        for i in os.getenv("VALID_CHANNELS"):
             n=bot.get_channel(i)
             print (f'{n.guild} \ {n.name} \ {n.id}')
         print('}')
@@ -97,13 +97,13 @@ async def kill(ctx):
 #Bot command Channel Validation Function
 
 async def channelvalid(ch):
-    if ch.id in os.environ.get("VALID_CHANNELS"):
+    if ch.id in os.getenv("VALID_CHANNELS"):
         return True
     else:
         return False
 
 async def nitrochannelvalid(ch):
-    if ch.id in os.environ.get("NITRO_VALID_CHANNELS"):
+    if ch.id in os.getenv("NITRO_VALID_CHANNELS"):
         return True
     else:
         return False
@@ -111,19 +111,19 @@ async def nitrochannelvalid(ch):
 #User Validation Function
 
 async def uservalid(member):
-    if member.id in os.environ.get("VALID_USERS"):
+    if member.id in os.getenv("VALID_USERS"):
         return True
     else:
         return False
 
 async def A_uservalid(member):
-    if member.id in os.environ.get("VALID_USERS"):
+    if member.id in os.getenv("VALID_USERS"):
         return True
     else:
         return False
 
 def main():
-    bot.run(os.environ.get("DISCORD_API_TOKEN"))
+    bot.run(os.getenv("DISCORD_API_TOKEN"))
 
 if __name__ == "__main__":
     main()
