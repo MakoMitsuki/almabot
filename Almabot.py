@@ -131,25 +131,6 @@ async def A_uservalid(member):
         return True
     else:
         return False
-############ COG LOAD LOOP ###############
-
-#for filename in os.listdir('./cogs'):
-#    if filename.endswith('.py'):
-#        try:
-#            print(f'loading {filename}')
-#            bot.load_extension(f'cogs.{filename[:-3]}')
-#        except:
-#            print(f'error loading {filename} on cog load')
-
-# async def schedule_loop():
-#     while True:
-#         schedule.run_pending()
-#         await asyncio.sleep(1)
-#
-#
-# bot.loop.create_task(schedule_loop())
-
-# bot.run(DISCORD_API_TOKEN)
 
 def main():
     bot.run(DISCORD_API_TOKEN)
