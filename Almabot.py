@@ -6,6 +6,7 @@ import os
 from discord.ext import commands, tasks
 import threading
 import time
+from dotenv import load_dotenv, find_dotenv
 
 ######### Scheduler ##########
 
@@ -23,16 +24,7 @@ schedthread.start()
 
 ############# ENV VAR PARSING ###############
 
-#load_dotenv()
-DISCORD_API_TOKEN = 'NzMwMDg4MDk4ODAwNTk5MTMx.GxSlU2.JV4nhxHmy-1-8SFeP6eHn8voD4N1BZB-EEnEAw'
-GSPREAD_ID = '1BEovJX4OQm-fQDBTDFyhPUqEqpMxZ1KQEGVtCh7aIa8'
-GUILD_ID = 465931452085829643
-VALID_CHANNELS = [739561983187222558,539671619677978634,740429361240604762]
-VALID_USERS = [95665066250088448,120409761182253056,122959829856813056]
-NITRO_VALID_CHANNELS= [585923852098469888]
-LOG_CHANNEL= 740429361240604762
-
-
+load_dotenv(find_dotenv)
 
 API_callcount=0
 
@@ -107,13 +99,13 @@ async def kill(ctx):
 #Bot command Channel Validation Function
 
 async def channelvalid(ch):
-    if ch.id in VALID_CHANNELS:
+    if ch.id in os.environ.get("VALID_CHANNELS"):
         return True
     else:
         return False
 
 async def nitrochannelvalid(ch):
-    if ch.id in NITRO_VALID_CHANNELS:
+    if ch.id in os.environ.get("NITRO_VALID_CHANNELS"):
         return True
     else:
         return False
@@ -121,19 +113,19 @@ async def nitrochannelvalid(ch):
 #User Validation Function
 
 async def uservalid(member):
-    if member.id in VALID_USERS:
+    if member.id in os.environ.get("VALID_USERS"):
         return True
     else:
         return False
 
 async def A_uservalid(member):
-    if member.id in VALID_USERS:
+    if member.id in os.environ.get("VALID_USERS"):
         return True
     else:
         return False
 
 def main():
-    bot.run(DISCORD_API_TOKEN)
+    bot.run(os.environ.get("DISCORD_API_TOKEN"))
 
 if __name__ == "__main__":
     main()
