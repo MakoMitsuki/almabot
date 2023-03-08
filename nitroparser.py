@@ -72,7 +72,8 @@ class Nitro(commands.Cog):
             nitrolist[str(member.id)]['gspread Index']='A'+str(len(nitrolist)+3) #int = spreadsheet vertical offset
             nitrolist[str(member.id)]['emoji']='0'
             await self.logToChannel(f'{member} has boosted the server for the first time!')
-            if self.api_free():
+            isFree = await self.api_free()
+            if isFree:
                 await self.write_to_gspread(nitrolist, member)
             else:
                 await self.add_to_queue(nitrolist, member)
@@ -81,7 +82,8 @@ class Nitro(commands.Cog):
         if str(member.id) in nitrolist and str(member.display_name) != nitrolist[str(member.id)]['Display Name']:
             nitrolist[str(member.id)]['Display Name']=str(member.display_name)
             await self.logToChannel(f'{member} has changed their `display_name` to {member.display_name}')
-            if self.api_free():
+            isFree = await self.api_free()
+            if isFree:
                 await self.write_to_gspread(nitrolist, member)
             else:
                 await self.add_to_queue(nitrolist, member)
@@ -96,7 +98,8 @@ class Nitro(commands.Cog):
             nitrolist[str(member.id)]['Nitro End']=str(datetime.now().date())
             await self.logToChannel(f'{member} has removed their server boost.')
             #do stuff here
-            if self.api_free():
+            isFree = await self.api_free()
+            if isFree:
                 await self.write_to_gspread(nitrolist, member)
             else:
                 await self.add_to_queue(nitrolist, member)
@@ -120,7 +123,8 @@ class Nitro(commands.Cog):
                 nitrolist[str(member.id)]['Nitro Total']=str(i)
                 await self.logToChannel(f'{member} has reboosted the server within 10 days.')
 
-            if self.api_free():
+            isFree = await self.api_free()
+            if isFree:
                 await self.write_to_gspread(nitrolist, member)
             else:
                 await self.add_to_queue(nitrolist, member)
@@ -128,7 +132,9 @@ class Nitro(commands.Cog):
     async def change_name_nitrodata(self, nitrolist, member):
         if str(member.id) in nitrolist and nitrolist[str(member.id)]['Name']!=str(member):
             nitrolist[str(member.id)]['Name']=str(member)
-            if self.api_free():
+            
+            isFree = await self.api_free()
+            if isFree:
                 await self.write_to_gspread(nitrolist, member)
             else:
                 await self.add_to_queue(nitrolist, member)
@@ -333,7 +339,8 @@ class Nitro(commands.Cog):
     @commands.hybrid_command(name='api_count_test', with_app_command=True)
     async def api_count_test(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
-            if self.api_free():
+            isFree = await self.api_free()
+            if isFree:
                 print(f'The count is at {Almabot.API_callcount}')
             else:
                 print('False over 5')
