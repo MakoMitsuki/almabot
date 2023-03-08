@@ -274,7 +274,6 @@ class Nitro(commands.Cog):
         guildid=int(os.getenv("GUILD_ID"))
 
         if after.guild.id == guildid:
-            print('attempting member update check')
             if before.roles != after.roles:
 
                 with open('./nitro_data.json', 'r') as f:
