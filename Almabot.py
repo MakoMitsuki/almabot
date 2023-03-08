@@ -37,7 +37,9 @@ class Almabot(commands.Bot):
         print("Almabot is loading nitroparser...")
         await self.load_extension("nitroparser")
 
-bot = Almabot(command_prefix = '.', intents=discord.Intents.default())
+intents = discord.Intents.default()
+intents.message_content = True
+bot = Almabot(command_prefix = '.', intents=intents)
 
 ######### COMMANDS #########
 
