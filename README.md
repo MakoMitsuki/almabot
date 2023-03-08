@@ -1,5 +1,6 @@
 # Almabot
-Fork of Almabot originally written by [Alma Emma](https://github.com/AlmaEmma)
+Re-host of Almabot originally written by [Alma Emma](https://github.com/AlmaEmma)
+See original code under `/original` folder
 
 ## Prerequisites
 - Python 3 (3.11.2)
@@ -14,4 +15,19 @@ Fork of Almabot originally written by [Alma Emma](https://github.com/AlmaEmma)
 2. Install the prerequisites
 3. Copy `.env.sample`, rename to `.env`, and fill in the blanks on the .env with tokens, etc.
 4. Do the same above to `client_secret_sample.json` which you will be renaming to `client_secret.json`
-4. Run using `python3 Almabot.py`
+5. Create a `nitro_data.json` file with the following structure
+```
+{
+    "idhere": {
+       "Name": "",
+       "Display Name": "",
+       "Nitro Start": "",
+       "Nitro Status": "",
+       "Nitro Total": "",
+       "gspread Index": "",
+       "emoji": "1"
+    },
+    ...
+}
+```
+6. Run using `python3 Almabot.py`
