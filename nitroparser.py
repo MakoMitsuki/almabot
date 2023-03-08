@@ -21,7 +21,7 @@ class Nitro(commands.Cog):
 
     async def logToChannel(self, message):
         try:
-            await self.bot.get_channel(os.getenv("LOG_CHANNEL")).send(message)
+            await Almabot.bot.get_channel(os.getenv("LOG_CHANNEL")).send(message)
         finally:
             pass
     
