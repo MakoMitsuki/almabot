@@ -81,12 +81,12 @@ async def validchannels(ctx):
             print (f'{n.guild} \ {n.name} \ {n.id}')
         print('}')
 
-@bot.hybrid_command()
+@bot.hybrid_command(name='count', with_app_command=True)
 async def count(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print(f'API_callcount is {API_callcount}')
 
-@bot.hybrid_command()
+@bot.hybrid_command(name='kill', with_app_command=True)
 async def kill(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         try:
@@ -121,6 +121,10 @@ async def A_uservalid(member):
         return True
     else:
         return False
+
+bot.add_command(count)
+bot.add_command(validchannels)
+bot.add_command(kill)
 
 def main():
     bot.run(os.getenv("DISCORD_API_TOKEN"))
