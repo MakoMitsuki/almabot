@@ -308,7 +308,7 @@ class Nitro(commands.Cog):
                 json.dump(nitrolist, f)
 
     ############################ COMMANDS #####################################
-    @commands.command()
+    @commands.hybrid_command()
     async def database_init(self, ctx):
         if await Almabot.nitrochannelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             print('command in nitro channel list')
@@ -330,7 +330,7 @@ class Nitro(commands.Cog):
 
             await self.print_database_batch_gspread()
 
-    @commands.command()
+    @commands.hybrid_command()
     async def api_count_test(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             if self.api_free():
@@ -338,7 +338,7 @@ class Nitro(commands.Cog):
             else:
                 print('False over 5')
 
-    @commands.command()
+    @commands.hybrid_command()
     async def api_stress_test(self, ctx):
         if await Almabot.nitrochannelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             print('command in nitro channel list')
@@ -358,7 +358,7 @@ class Nitro(commands.Cog):
             with open('./nitro_data.json', 'w') as f:
                 json.dump(nitrolist, f)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def logtest(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             await self.logToChannel('test')

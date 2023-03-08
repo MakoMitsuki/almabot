@@ -31,36 +31,36 @@ API_callcount=0
 class Almabot(commands.Bot):
 
     async def on_ready(self):
-        print('')
+        print('Almabot is booting...')
 
     async def setup_hook(self):
-        print("Almabot i loading nitroparser...")
+        print("Almabot is loading nitroparser...")
         await self.load_extension("nitroparser")
 
 bot = Almabot(command_prefix = '.', intents=discord.Intents.default())
 
 ######### COMMANDS #########
 
-@bot.command()
+@bot.hybrid_command()
 async def load(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         bot.load_extension(f'cogs.{extension}')
         print(f'loading {extension}')
 
-@bot.command()
+@bot.hybrid_command()
 async def unload(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         bot.unload_extension(f'cogs.{extension}')
         print(f'unloading {extension}')
 
-@bot.command()
+@bot.hybrid_command()
 async def reload(ctx, extension):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         bot.unload_extension(f'cogs.{extension}')
         bot.load_extension(f'cogs.{extension}')
         print(f'reloading {extension}')
 
-@bot.command()
+@bot.hybrid_command()
 async def validusers(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
@@ -72,7 +72,7 @@ async def validusers(ctx):
                 print(i)
         print('}')
 
-@bot.command()
+@bot.hybrid_command()
 async def validchannels(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
@@ -81,12 +81,12 @@ async def validchannels(ctx):
             print (f'{n.guild} \ {n.name} \ {n.id}')
         print('}')
 
-@bot.command()
+@bot.hybrid_command()
 async def count(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print(f'API_callcount is {API_callcount}')
 
-@bot.command()
+@bot.hybrid_command()
 async def kill(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         try:
