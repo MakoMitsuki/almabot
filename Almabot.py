@@ -99,13 +99,13 @@ async def kill(ctx):
 #Bot command Channel Validation Function
 
 async def channelvalid(ch):
-    if ch.id in os.getenv("VALID_CHANNELS"):
+    if str(ch.id) in os.getenv("VALID_CHANNELS"):
         return True
     else:
         return False
 
 async def nitrochannelvalid(ch):
-    if ch.id in os.getenv("NITRO_VALID_CHANNELS"):
+    if str(ch.id) in os.getenv("NITRO_VALID_CHANNELS"):
         return True
     else:
         return False
@@ -113,13 +113,13 @@ async def nitrochannelvalid(ch):
 #User Validation Function
 
 async def uservalid(member):
-    if member.id in os.getenv("VALID_USERS"):
+    if str(member.id) in os.getenv("VALID_USERS"):
         return True
     else:
         return False
 
 async def A_uservalid(member):
-    if member.id in os.getenv("VALID_USERS"):
+    if str(member.id) in os.getenv("VALID_USERS"):
         return True
     else:
         return False
