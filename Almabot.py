@@ -124,10 +124,6 @@ async def A_uservalid(member):
     else:
         return False
 
-bot.add_command(count)
-bot.add_command(validchannels)
-bot.add_command(kill)
-
 def main():
     bot.run(os.getenv("DISCORD_API_TOKEN"))
 
