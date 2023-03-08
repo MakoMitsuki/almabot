@@ -1,5 +1,7 @@
 # Almabot
 Re-host of Almabot originally written by [Alma Emma](https://github.com/AlmaEmma)
+
+A fun little sort of dive back into Python even if I really suck at it.
 See original code under `/original` folder
 
 ## Prerequisites
