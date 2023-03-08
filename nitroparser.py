@@ -330,7 +330,7 @@ class Nitro(commands.Cog):
 
             await self.print_database_batch_gspread()
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(name='api_count_test', with_app_command=True)
     async def api_count_test(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             if self.api_free():
@@ -358,7 +358,7 @@ class Nitro(commands.Cog):
             with open('./nitro_data.json', 'w') as f:
                 json.dump(nitrolist, f)
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(name='logtest', with_app_command=True)
     async def logtest(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
             await self.logToChannel('test')

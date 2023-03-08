@@ -72,7 +72,7 @@ async def validusers(ctx):
                 print(i)
         print('}')
 
-@bot.hybrid_command()
+@bot.hybrid_command(name='validchannels', with_app_command=True)
 async def validchannels(ctx):
     if await uservalid(ctx.author) and await channelvalid(ctx.channel):
         print('List of bot enabled channels{')
