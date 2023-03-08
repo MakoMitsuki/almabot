@@ -27,7 +27,7 @@ class Nitro(commands.Cog):
     
     async def api_free(self):
         if Almabot.API_callcount==0:
-            await Almabot.bot.loop.create_task(self.callcount_reset())
+            print(f'API_callcount is at {Almabot.API_callcount}')
         if Almabot.API_callcount<40:
             Almabot.API_callcount+=1
             print(f'API_callcount {Almabot.API_callcount}/40')
