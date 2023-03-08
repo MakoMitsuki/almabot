@@ -21,7 +21,7 @@ class Nitro(commands.Cog):
 
     async def logToChannel(self, message):
         try:
-            await Almabot.bot.get_channel(os.getenv("LOG_CHANNEL")).send(message)
+            await self.bot.get_channel(int(os.getenv("LOG_CHANNEL"))).send(message)
         finally:
             pass
     
@@ -231,7 +231,7 @@ class Nitro(commands.Cog):
                 pass
         if emoji_count > 0:
             try:
-                art_channel=Almabot.bot.get_channel(489201127125155850)
+                art_channel=self.bot.get_channel(489201127125155850)
                 await art_channel.send(f'<!@&489196596257488897> {emoji_count} booster(s) are now eligble for emojis!')
             finally:
 
@@ -249,7 +249,7 @@ class Nitro(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         try:
-            print(f'Nitroparser loaded and connected to {self.bot.get_guild(os.getenv("GUILD_ID"))}')
+            print(f'Nitroparser loaded and connected to {self.bot.get_guild(int(os.getenv("GUILD_ID")))}')
         except:
             print('Environmental variables failed to load.\n Not connected to any server.')
         try:
@@ -297,7 +297,7 @@ class Nitro(commands.Cog):
 
     @commands.Cog.listener()
     async def on_user_update(self, before, after):
-        if before.name != after.name and self.bot.get_guild(os.getenv("GUILD_ID")).get_member(after.id).premium_since != None:
+        if before.name != after.name and self.bot.get_guild(int(os.getenv("GUILD_ID"))).get_member(after.id).premium_since != None:
             with open('./nitro_data.json', 'r') as f:
                 nitrolist = json.load(f)
 
