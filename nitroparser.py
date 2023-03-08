@@ -8,7 +8,10 @@ import time
 from datetime import datetime
 import Almabot
 from discord.ext import commands, tasks
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class Nitro(commands.Cog):
 
@@ -18,7 +21,7 @@ class Nitro(commands.Cog):
 
     async def logToChannel(self, message):
         try:
-            await self.bot.get_channel(Almabot.LOG_CHANNEL).send(message)
+            await self.bot.get_channel(os.getenv("LOG_CHANNEL")).send(message)
         finally:
             pass
     
@@ -36,7 +39,7 @@ class Nitro(commands.Cog):
     
     async def write_to_gspread(self, nitrolist, member):
         gc=gspread.service_account(filename='./client_secret.json')
-        wks=gc.open_by_key(Almabot.GSPREAD_ID).sheet1
+        wks=gc.open_by_key(os.getenv("GSPREAD_ID")).sheet1
         name=nitrolist[str(member.id)]['Name']
         display_name=nitrolist[str(member.id)]['Display Name']
         start=nitrolist[str(member.id)]['Nitro Start']
@@ -155,7 +158,7 @@ class Nitro(commands.Cog):
 
     def print_queue_batch_gspread(self):
         gc=gspread.service_account(filename='./client_secret.json')
-        wks=gc.open_by_key(Almabot.GSPREAD_ID).sheet1
+        wks=gc.open_by_key(os.getenv("GSPREAD_ID")).sheet1
 
         with open('./queued_data.json', 'r') as f:
             queued_data = json.load(f)
@@ -186,7 +189,7 @@ class Nitro(commands.Cog):
     async def print_database_batch_gspread(self):
         print('database_print function executed')
         gc=gspread.service_account(filename='./client_secret.json')
-        wks=gc.open_by_key(Almabot.GSPREAD_ID).sheet1
+        wks=gc.open_by_key(os.getenv("GSPREAD_ID")).sheet1
 
         with open('./nitro_data.json', 'r') as f:
             nitrolist = json.load(f)
@@ -246,11 +249,11 @@ class Nitro(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         try:
-            print(f'Nitroparser loaded and connected to {self.bot.get_guild(Almabot.GUILD_ID)}')
+            print(f'Nitroparser loaded and connected to {self.bot.get_guild(os.getenv("GUILD_ID"))}')
         except:
             print('Environmental variables failed to load.\n Not connected to any server.')
         try:
-            print(f'Connected to Spreadsheet {Almabot.GSPREAD_ID} through Google Spreadsheet API')
+            print(f'Connected to Spreadsheet {os.getenv("GSPREAD_ID")} through Google Spreadsheet API')
         except:
             print('Failed to connect to Google API')
         Almabot.API_callcount=0
@@ -262,7 +265,7 @@ class Nitro(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        guildid=Almabot.GUILD_ID
+        guildid=os.getenv("GUILD_ID")
 
         if after.guild.id == guildid:
             if before.roles != after.roles:
@@ -294,7 +297,7 @@ class Nitro(commands.Cog):
 
     @commands.Cog.listener()
     async def on_user_update(self, before, after):
-        if before.name != after.name and self.bot.get_guild(Almabot.GUILD_ID).get_member(after.id).premium_since != None:
+        if before.name != after.name and self.bot.get_guild(os.getenv("GUILD_ID")).get_member(after.id).premium_since != None:
             with open('./nitro_data.json', 'r') as f:
                 nitrolist = json.load(f)
 
@@ -311,7 +314,7 @@ class Nitro(commands.Cog):
             print('command in nitro channel list')
             #gc=gspread.service_account(filename='./client_secret.json')
             wks=[]
-            #wks=gc.open_by_key(Almabot.GSPREAD_ID).sheet1
+            #wks=gc.open_by_key(os.getenv("GSPREAD_ID")).sheet1
 
             with open('./nitro_data.json', 'r') as f:
                 nitrolist = json.load(f)
@@ -341,7 +344,7 @@ class Nitro(commands.Cog):
             print('command in nitro channel list')
             #gc=gspread.service_account(filename='./client_secret.json')
             wks=[]
-            #wks=gc.open_by_key(Almabot.GSPREAD_ID).sheet1
+            #wks=gc.open_by_key(os.getenv("GSPREAD_ID")).sheet1
 
             with open('./nitro_data.json', 'r') as f:
                 nitrolist = json.load(f)
