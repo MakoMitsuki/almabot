@@ -71,7 +71,7 @@ class Nitro(commands.Cog):
             nitrolist[str(member.id)]['Nitro Total']='0'#str((datetime.today().date()-datetime.date(member.premium_since)).days//30)
             nitrolist[str(member.id)]['gspread Index']='A'+str(len(nitrolist)+3) #int = spreadsheet vertical offset
             nitrolist[str(member.id)]['emoji']='0'
-            await self.log(f'{member} has boosted the server for the first time!')
+            await self.logToChannel(f'{member} has boosted the server for the first time!')
             isFree = await self.api_free()
             if isFree:
                 await self.write_to_gspread(nitrolist, member)
@@ -81,7 +81,7 @@ class Nitro(commands.Cog):
     async def change_displayname_nitrodata(self, nitrolist, member):
         if str(member.id) in nitrolist and str(member.display_name) != nitrolist[str(member.id)]['Display Name']:
             nitrolist[str(member.id)]['Display Name']=str(member.display_name)
-            await self.log(f'{member} has changed their `display_name` to {member.display_name}')
+            await self.logToChannel(f'{member} has changed their `display_name` to {member.display_name}')
             isFree = await self.api_free()
             if isFree:
                 await self.write_to_gspread(nitrolist, member)
@@ -96,7 +96,7 @@ class Nitro(commands.Cog):
             nitrolist[str(member.id)]['Nitro Total']=str(i)
             nitrolist[str(member.id)]['Nitro Status']='Inactive'
             nitrolist[str(member.id)]['Nitro End']=str(datetime.now().date())
-            await self.log(f'{member} has removed their server boost.')
+            await self.logToChannel(f'{member} has removed their server boost.')
             #do stuff here
             isFree = await self.api_free()
             if isFree:
@@ -113,7 +113,7 @@ class Nitro(commands.Cog):
             if diff > 10:
                 nitrolist[str(member.id)]['Nitro Start']=str(datetime.date(member.premium_since))
                 nitrolist[str(member.id)]['Nitro Status']='Active'
-                await self.log(f'{member} has reboosted the server. Consecutive months have been reset!')
+                await self.logToChannel(f'{member} has reboosted the server. Consecutive months have been reset!')
             else:
                 nitrolist[str(member.id)]['Nitro Status']='Active'
                 i=int(nitrolist[str(member.id)]['Nitro Total'])
@@ -121,7 +121,7 @@ class Nitro(commands.Cog):
                 c=nitrolist[str(member.id)]['Nitro End']
                 i-=(datetime.fromisoformat(c).date()-datetime.fromisoformat(d).date()).days//30
                 nitrolist[str(member.id)]['Nitro Total']=str(i)
-                await self.log(f'{member} has reboosted the server within 10 days.')
+                await self.logToChannel(f'{member} has reboosted the server within 10 days.')
 
             isFree = await self.api_free()
             if isFree:
@@ -218,7 +218,7 @@ class Nitro(commands.Cog):
     @tasks.loop(hours=24)
     async def check_emoji(self):
         print('emoji_check starting')
-        await self.log('Emoji_check starting')
+        await self.logToChannel('Emoji_check starting')
         with open('./nitro_data.json', 'r') as f:
             nitrolist = json.load(f)
 
@@ -264,9 +264,9 @@ class Nitro(commands.Cog):
             print('Failed to connect to Google API')
         Almabot.API_callcount=0
         print('API_callcount initialized to 0')
-        await self.log('Almabot is online!')
+        await self.logToChannel('Almabot is online!')
         schedule.every().day.at("09:48").do(self.check_emoji)
-        await self.log('Emoji_check scheduled for 12:00pm EST.')
+        await self.logToChannel('Emoji_check scheduled for 12:00pm EST.')
 
 
     @commands.Cog.listener()
@@ -368,7 +368,7 @@ class Nitro(commands.Cog):
     @commands.hybrid_command(name='logtest', with_app_command=True)
     async def logtest(self, ctx):
         if await Almabot.channelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
-            await self.log('test')
+            await self.logToChannel('test')
 
 
 
