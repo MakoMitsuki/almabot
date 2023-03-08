@@ -4,7 +4,7 @@ import os
 from discord.ext import commands
 import threading
 import time
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 ######### Scheduler ##########
 
@@ -22,7 +22,7 @@ schedthread.start()
 
 ############# ENV VAR PARSING ###############
 
-load_dotenv(find_dotenv)
+load_dotenv()
 
 API_callcount=0
 
