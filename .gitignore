@@ -1,5 +1,6 @@
 .env
 client_secret.json
 nitro_data.json
+nitro_data_copy.json
 
 /__pycache__
