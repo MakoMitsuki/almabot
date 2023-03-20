@@ -213,7 +213,8 @@ class Nitro(commands.Cog):
             batch_data.append({'range': f'{r}:{r}', 'values': [v]})
 
         wks.batch_update(batch_data, value_input_option='USER_ENTERED')
-        print('printed batch_data to sheet')
+        print('printed manually changed batch_data to sheet')
+        await self.logToChannel('Manually updated database and spreadsheet.')
 
     @tasks.loop(hours=24)
     async def check_emoji(self):
@@ -334,6 +335,12 @@ class Nitro(commands.Cog):
             with open('./nitro_data.json', 'w') as f:
                 json.dump(nitrolist, f)
 
+            await self.print_database_batch_gspread()
+            
+    @commands.hybrid_command()
+    async def database_manual_update(self, ctx):
+        if await Almabot.nitrochannelvalid(ctx.channel) and await Almabot.uservalid(ctx.author):
+            print('command in nitro channel list')
             await self.print_database_batch_gspread()
 
     @commands.hybrid_command(name='api_count_test', with_app_command=True)
